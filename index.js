@@ -1,16 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
 
 app.use(cors());
 app.use(express.json());
-
-// farhantanvirahmed698
-// qBbR1p6QvXtbBMcl
 
 
 
@@ -48,6 +45,42 @@ async function run() {
     app.post("/assignment", async (req, res) => {
       const newAssignment = req.body;
       const result = await assignmentCollection.insertOne(newAssignment);
+      res.send(result);
+    })
+
+
+    app.get("/assignment/:id", async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await assignmentCollection.findOne(query);
+      res.send(result);
+    })
+
+
+    app.put("/assignment/:id", async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = {upsert:true};
+      const updatedAssignment = req.body;
+      const assignment = {
+        $set: {
+          title: updatedAssignment.title, 
+          marks: updatedAssignment.marks, 
+          image: updatedAssignment.image, 
+          difficulty: updatedAssignment.difficulty, 
+          description: updatedAssignment.description, 
+          date: updatedAssignment.date
+        }
+      }
+      const result = await assignmentCollection.updateOne(filter, assignment, options);
+      res.send(result);
+    })
+
+
+    app.delete("/assignment/:id", async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await assignmentCollection.deleteOne(query)
       res.send(result);
     })
 
