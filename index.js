@@ -118,7 +118,7 @@ async function run() {
       const evaluateAssignment = req.body;
       const assignment = {
         $set: {
-          marks: evaluateAssignment.marks, 
+          obtainMarks: evaluateAssignment.obtainMarks, 
           feedBack: evaluateAssignment.feedBack, 
           status: evaluateAssignment.status
         }
