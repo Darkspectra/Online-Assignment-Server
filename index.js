@@ -33,6 +33,7 @@ async function run() {
     await client.connect();
 
     const assignmentCollection = client.db("assignmentDB").collection("assignment");
+    const assignmentSubmission = client.db("assignmentDB").collection("submission");
 
 
     app.get("/assignment", async (req, res) => {
@@ -83,6 +84,17 @@ async function run() {
       const result = await assignmentCollection.deleteOne(query)
       res.send(result);
     })
+
+
+    // submit assignment API
+
+    app.post("/submission", async (req, res) => {
+      const newSubmission = req.body;
+      const result = await assignmentSubmission.insertOne(newSubmission);
+      res.send(result);
+    })
+
+
 
 
 
