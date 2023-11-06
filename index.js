@@ -95,6 +95,39 @@ async function run() {
     })
 
 
+    app.get("/submission", async (req, res) => {
+      const cursor = assignmentSubmission.find()
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+
+    app.get("/submission/:id", async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await assignmentSubmission.findOne(query);
+      res.send(result);
+    })
+
+
+
+    app.put("/submission/:id", async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = {upsert:true};
+      const evaluateAssignment = req.body;
+      const assignment = {
+        $set: {
+          marks: evaluateAssignment.marks, 
+          feedBack: evaluateAssignment.feedBack, 
+          status: evaluateAssignment.status
+        }
+      }
+      const result = await assignmentSubmission.updateOne(filter, assignment, options);
+      res.send(result);
+    })
+
+
 
 
 
